@@ -1,19 +1,15 @@
-function loginUser(){
+function login(){
 
-let username = document.getElementById("username").value
-let password = document.getElementById("password").value
+const username = document.getElementById("username").value;
+const password = document.getElementById("password").value;
 
-if(username === "admin" && password === "admin123"){
-
-localStorage.setItem("login","true")
-
-window.location.href = "issue.html"
-
+if(username === "admin" && password === "admin123")
+{
+window.location.href = "issue.html";
 }
-else{
-
-alert("Wrong username or password")
-
+else
+{
+alert("Invalid credentials");
 }
 
 }

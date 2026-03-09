@@ -1,150 +1,117 @@
-const API = "https://phi-lab-server.vercel.app/api/v1/lab/issues"
+let allIssues = [];
 
-window.onload = function(){
+function loadIssues(type){
 
-if(!localStorage.getItem("login")){
-
-window.location.href = "index.html"
-
-}
-
-loadIssues()
-
-}
-
-
-// Load All Issues
-
-function loadIssues(){
-
-fetch(API)
+fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
 .then(res => res.json())
-.then(data => showIssues(data.data))
+.then(data => {
+
+allIssues = data.data;
+
+showIssues(type);
+
+})
 
 }
 
+function showIssues(type){
 
-// Show Issues
+let issues = allIssues;
 
-function showIssues(issues){
+if(type === "open"){
+issues = allIssues.filter(issue => issue.status === "open");
+}
 
-let container = document.getElementById("issuesContainer")
+if(type === "closed"){
+issues = allIssues.filter(issue => issue.status === "closed");
+}
 
-container.innerHTML = ""
+document.getElementById("count").innerText =
+"Issues: " + issues.length;
+
+const container = document.getElementById("issue-container");
+
+container.innerHTML = "";
 
 issues.forEach(issue => {
 
-let border = issue.status === "open" ? "border-green-500" : "border-purple-500"
+const div = document.createElement("div");
 
-let card = `
+div.className =
+"bg-white p-4 rounded shadow border-t-4 cursor-pointer";
 
-<div onclick="loadSingle(${issue.id})"
-class="bg-white p-4 shadow cursor-pointer border-t-4 ${border}">
+if(issue.status === "open"){
+div.classList.add("border-green-500");
+}else{
+div.classList.add("border-purple-500");
+}
 
-<h3 class="font-bold mb-2">${issue.title}</h3>
+div.innerHTML = `
+<h3 class="font-bold">${issue.title}</h3>
+<p class="text-sm text-gray-600">${issue.description}</p>
+<p class="text-sm mt-2">Status: ${issue.status}</p>
+<p class="text-sm">Author: ${issue.author}</p>
+`;
 
-<p class="text-sm text-gray-600 mb-3">
-${issue.description}
-</p>
+div.onclick = function(){
+openModal(issue);
+}
 
-<p>Status: ${issue.status}</p>
-
-<p>Author: ${issue.author}</p>
-
-<p>Priority: ${issue.priority}</p>
-
-<p>Label: ${issue.label}</p>
-
-<p class="text-sm text-gray-400">
-${issue.createdAt}
-</p>
-
-</div>
-`
-
-container.innerHTML += card
+container.appendChild(div);
 
 })
 
 }
 
+function openModal(issue){
 
-// Open Tab
+document.getElementById("modal").classList.remove("hidden");
 
-function loadOpen(){
+document.getElementById("modal-title").innerText = issue.title;
 
-fetch(API)
-.then(res => res.json())
-.then(data => {
+document.getElementById("modal-desc").innerText = issue.description;
 
-let openIssues = data.data.filter(i => i.status === "open")
-
-showIssues(openIssues)
-
-})
+document.getElementById("modal-author").innerText =
+"Author: " + issue.author;
 
 }
-
-
-// Closed Tab
-
-function loadClosed(){
-
-fetch(API)
-.then(res => res.json())
-.then(data => {
-
-let closedIssues = data.data.filter(i => i.status === "closed")
-
-showIssues(closedIssues)
-
-})
-
-}
-
-
-// Search
-
-function searchIssue(){
-
-let text = document.getElementById("searchInput").value
-
-fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${text}`)
-.then(res => res.json())
-.then(data => showIssues(data.data))
-
-}
-
-
-// Load Single Issue
-
-function loadSingle(id){
-
-fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${id}`)
-.then(res => res.json())
-.then(data => {
-
-let issue = data.data
-
-document.getElementById("modal-title").innerText = issue.title
-document.getElementById("modal-desc").innerText = issue.description
-document.getElementById("modal-status").innerText = "Status: " + issue.status
-document.getElementById("modal-author").innerText = "Author: " + issue.author
-document.getElementById("modal-priority").innerText = "Priority: " + issue.priority
-document.getElementById("modal-label").innerText = "Label: " + issue.label
-document.getElementById("modal-date").innerText = "Created: " + issue.createdAt
-
-document.getElementById("modal").classList.remove("hidden")
-
-})
-
-}
-
-
-// Close Modal
 
 function closeModal(){
 
-document.getElementById("modal").classList.add("hidden")
+document.getElementById("modal").classList.add("hidden");
 
 }
+
+function searchIssue(){
+
+const text = document.getElementById("searchText").value;
+
+fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${text}`)
+.then(res => res.json())
+.then(data => {
+
+const container = document.getElementById("issue-container");
+
+container.innerHTML = "";
+
+data.data.forEach(issue => {
+
+const div = document.createElement("div");
+
+div.className =
+"bg-white p-4 rounded shadow border-t-4 border-green-500";
+
+div.innerHTML = `
+<h3 class="font-bold">${issue.title}</h3>
+<p>${issue.description}</p>
+`;
+
+container.appendChild(div);
+
+})
+
+})
+
+}
+
+loadIssues("all");
