@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Issues Tracker</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<!-- NAVBAR -->
+
+<nav class="bg-white shadow p-4 flex justify-between items-center">
+
+<h1 class="text-xl font-bold">GitHub Issues Tracker</h1>
+
+<div class="flex gap-2">
+
+<input id="search-input"
+type="text"
+placeholder="Search issue..."
+class="border p-2 rounded">
+
+<button onclick="searchIssue()"
+class="bg-blue-500 text-white px-4 py-2 rounded">
+Search
+</button>
+
+</div>
+
+</nav>
+
+
+<!-- TABS -->
+
+<div class="p-6">
+
+<div class="flex gap-4 mb-6">
+
+<button id="btn-all"
+onclick="loadIssues('all')"
+class="tab-btn bg-purple-600 text-white px-4 py-2 rounded">
+All
+</button>
+
+<button id="btn-open"
+onclick="loadIssues('open')"
+class="tab-btn bg-gray-200 px-4 py-2 rounded">
+Open
+</button>
+
+<button id="btn-closed"
+onclick="loadIssues('closed')"
+class="tab-btn bg-gray-200 px-4 py-2 rounded">
+Closed
+</button>
+
+</div>
+
+
+<div class="flex items-center gap-3 mb-6">
+
+<div class="bg-purple-100 p-2 rounded-full">⚙</div>
+
+<div>
+
+<h2 class="text-xl font-bold">
+<span id="issue-count">0</span> Issues
+</h2>
+
+<p class="text-gray-500">
+Track and manage your project issues
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ISSUE CARDS -->
+
+<div id="issue-container"
+class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-6 pb-10">
+
+</div>
+
+
+<!-- MODAL -->
+
+<div id="modal"
+class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center">
+
+<div class="bg-white p-6 rounded-lg w-[420px]">
+
+<div class="flex justify-between mb-3">
+
+<span id="modal-status"
+class="text-xs px-3 py-1 rounded-full bg-green-100 text-green-600">
+</span>
+
+<span id="modal-priority"
+class="text-xs px-3 py-1 rounded-full bg-red-100 text-red-500">
+</span>
+
+</div>
+
+<h2 id="modal-title"
+class="text-xl font-semibold mb-2"></h2>
+
+<p id="modal-description"
+class="text-gray-500 mb-4"></p>
+
+<div class="flex gap-2 mb-4">
+
+<span class="text-xs px-2 py-1 border border-red-300 text-red-500 rounded">
+BUG
+</span>
+
+<span class="text-xs px-2 py-1 border border-yellow-400 text-yellow-500 rounded">
+HELP WANTED
+</span>
+
+</div>
+
+<div class="bg-gray-100 p-3 rounded text-sm">
+
+<p id="modal-author"></p>
+<p id="modal-date"></p>
+
+</div>
+
+<div class="flex justify-end mt-4">
+
+<button onclick="closeModal()"
+class="bg-purple-600 text-white px-4 py-2 rounded">
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="/script.js"></script>
+
+</body>
+</html>
